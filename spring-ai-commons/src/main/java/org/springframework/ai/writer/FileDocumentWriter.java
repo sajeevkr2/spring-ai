@@ -17,6 +17,7 @@
 package org.springframework.ai.writer;
 
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.ai.document.Document;
@@ -73,7 +74,7 @@ public class FileDocumentWriter implements DocumentWriter {
 	@Override
 	public void accept(List<Document> docs) {
 
-		try (var writer = new FileWriter(this.fileName, this.append)) {
+		try (var writer = new FileWriter(this.fileName, StandardCharsets.UTF_8, this.append)) {
 
 			int index = 0;
 			for (Document doc : docs) {

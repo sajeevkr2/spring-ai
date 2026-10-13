@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -209,7 +210,7 @@ public class DefaultChatClient implements ChatClient {
 		@Override
 		public PromptUserSpec text(Resource text) {
 			Assert.notNull(text, "text cannot be null");
-			this.text(text, Charset.defaultCharset());
+			this.text(text, StandardCharsets.UTF_8);
 			return this;
 		}
 
@@ -296,7 +297,7 @@ public class DefaultChatClient implements ChatClient {
 		@Override
 		public PromptSystemSpec text(Resource text) {
 			Assert.notNull(text, "text cannot be null");
-			this.text(text, Charset.defaultCharset());
+			this.text(text, StandardCharsets.UTF_8);
 			return this;
 		}
 
@@ -1110,7 +1111,7 @@ public class DefaultChatClient implements ChatClient {
 		@Override
 		public ChatClientRequestSpec system(Resource text) {
 			Assert.notNull(text, "text cannot be null");
-			return this.system(text, Charset.defaultCharset());
+			return this.system(text, StandardCharsets.UTF_8);
 		}
 
 		@Override
@@ -1149,7 +1150,7 @@ public class DefaultChatClient implements ChatClient {
 		@Override
 		public ChatClientRequestSpec user(Resource text) {
 			Assert.notNull(text, "text cannot be null");
-			return this.user(text, Charset.defaultCharset());
+			return this.user(text, StandardCharsets.UTF_8);
 		}
 
 		@Override

@@ -16,6 +16,7 @@
 
 package org.springframework.ai.chat.prompt;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -319,6 +320,14 @@ class PromptTemplateTests {
 			.build();
 
 		assertThat(promptTemplate.render(Map.of())).isEqualTo("How Hello, world!");
+	}
+
+	@Test
+	void createWithResourceReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		PromptTemplate promptTemplate = new PromptTemplate(
+				new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8)));
+		assertThat(promptTemplate.render()).isEqualTo(text);
 	}
 
 	// Helper Custom Renderer for testing

@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,6 +63,13 @@ class MessageUtilsTests {
 		assertThatThrownBy(() -> MessageUtils.readResource(null, StandardCharsets.UTF_8))
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("resource cannot be null");
+	}
+
+	@Test
+	void readResourceAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		String content = MessageUtils.readResource(new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8)));
+		assertThat(content).isEqualTo(text);
 	}
 
 }

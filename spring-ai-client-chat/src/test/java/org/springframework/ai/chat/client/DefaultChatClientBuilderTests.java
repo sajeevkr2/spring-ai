@@ -17,6 +17,7 @@
 package org.springframework.ai.chat.client;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.advisor.ToolCallingAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.model.tool.ToolCallingManager;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -270,6 +272,28 @@ class DefaultChatClientBuilderTests {
 		var defaultRequest = (DefaultChatClient.DefaultChatClientRequestSpec) ReflectionTestUtils.getField(builder,
 				"defaultRequest");
 		assertThat(defaultRequest.getSystemText()).isEqualTo("final system message");
+	}
+
+	@Test
+	void whenDefaultSystemResourceThenReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		var builder = new DefaultChatClientBuilder(mock(ChatModel.class));
+		builder.defaultSystem(new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8)));
+		var defaultRequest = (DefaultChatClient.DefaultChatClientRequestSpec) ReflectionTestUtils.getField(builder,
+				"defaultRequest");
+		assertThat(defaultRequest).isNotNull();
+		assertThat(defaultRequest.getSystemText()).isEqualTo(text);
+	}
+
+	@Test
+	void whenDefaultUserResourceThenReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		var builder = new DefaultChatClientBuilder(mock(ChatModel.class));
+		builder.defaultUser(new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8)));
+		var defaultRequest = (DefaultChatClient.DefaultChatClientRequestSpec) ReflectionTestUtils.getField(builder,
+				"defaultRequest");
+		assertThat(defaultRequest).isNotNull();
+		assertThat(defaultRequest.getUserText()).isEqualTo(text);
 	}
 
 }

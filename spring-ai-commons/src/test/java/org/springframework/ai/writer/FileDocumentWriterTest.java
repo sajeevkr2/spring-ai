@@ -17,6 +17,7 @@
 package org.springframework.ai.writer;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -158,6 +159,16 @@ public class FileDocumentWriterTest {
 		assertEquals("Document two illustrates multi-line handling and line breaks.", lines.get(5));
 		assertEquals("Ensure preservation of formatting.", lines.get(6));
 		assertEquals(7, lines.size());
+	}
+
+	@Test
+	void testWritesUtf8() throws IOException {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		var writer = new FileDocumentWriter(this.testFileName);
+		writer.accept(List.of(new Document(text)));
+
+		String content = Files.readString(Path.of(this.testFileName), StandardCharsets.UTF_8);
+		assertTrue(content.contains(text));
 	}
 
 }

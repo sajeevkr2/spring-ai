@@ -16,6 +16,7 @@
 
 package org.springframework.ai.reader.markdown;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.markdown.config.MarkdownDocumentReaderConfig;
+import org.springframework.core.io.ByteArrayResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -281,6 +283,18 @@ class MarkdownDocumentReaderTest {
 		Document documentsFirst = documents.get(0);
 		assertThat(documentsFirst.getMetadata()).isEqualTo(Map.of("service", "some-service-name", "env", "prod"));
 		assertThat(documentsFirst.getText()).startsWith("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+	}
+
+	@Test
+	void testReadsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		MarkdownDocumentReader reader = new MarkdownDocumentReader(
+				new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8)),
+				MarkdownDocumentReaderConfig.defaultConfig());
+
+		List<Document> documents = reader.get();
+
+		assertThat(documents).extracting(Document::getText).containsExactly(text);
 	}
 
 }

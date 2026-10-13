@@ -18,6 +18,7 @@ package org.springframework.ai.reader.markdown;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +124,7 @@ public class MarkdownDocumentReader implements DocumentReader {
 		for (Resource markdownResource : this.markdownResources) {
 			DocumentVisitor documentVisitor = new DocumentVisitor(this.config);
 			try (var input = markdownResource.getInputStream()) {
-				Node node = this.parser.parseReader(new InputStreamReader(input));
+				Node node = this.parser.parseReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 
 				node.accept(documentVisitor);
 				documents.addAll(documentVisitor.getDocuments());

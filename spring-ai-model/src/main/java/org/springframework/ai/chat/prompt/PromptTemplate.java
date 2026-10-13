@@ -18,7 +18,6 @@ package org.springframework.ai.chat.prompt;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +86,7 @@ public class PromptTemplate implements PromptTemplateActions, PromptTemplateMess
 		Assert.notNull(renderer, "renderer cannot be null");
 
 		try (InputStream inputStream = resource.getInputStream()) {
-			this.template = StreamUtils.copyToString(inputStream, Charset.defaultCharset());
+			this.template = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
 			Assert.hasText(this.template, "template cannot be null or empty");
 		}
 		catch (IOException ex) {

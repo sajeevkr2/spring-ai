@@ -255,6 +255,22 @@ The computed similarity score is still available via `Document.getScore()` regar
 If you rely on reading the computed similarity distance from `document.getMetadata().get("distance")`, switch to `document.getScore()` instead, which is always populated and returns `1.0 - distance` (higher means more similar).
 If your documents use `distance` for domain-specific data, consider renaming that field to avoid the collision and the warning.
 
+=== Prompt and Document Resources
+
+==== Changed: Resources Are Read and Written as UTF-8
+
+The methods that read a prompt from a `Resource` without a `Charset` now read it as UTF-8 instead of the platform default charset: `system(Resource)` and `user(Resource)` of `ChatClient`, `text(Resource)` of its system and user specs, `defaultSystem(Resource)` and `defaultUser(Resource)` of `ChatClient.Builder`, `new SystemMessage(Resource)`, `new UserMessage(Resource)` and `new PromptTemplate(Resource)`.
+`MarkdownDocumentReader` now reads its files as UTF-8, and `FileDocumentWriter` writes as UTF-8.
+
+===== Impact
+
+On Java 18 and later the default charset is already UTF-8, so nothing changes.
+On Java 17, prompt files saved as UTF-8 are now read correctly on platforms whose default charset is not UTF-8, such as Windows, instead of being garbled.
+
+===== Migration
+
+A prompt file saved in another encoding must be read with its charset passed explicitly, for example `system(resource, Charset.forName("GBK"))`.
+
 
 [[upgrading-to-2-0-2]]
 == Upgrading to 2.0.2

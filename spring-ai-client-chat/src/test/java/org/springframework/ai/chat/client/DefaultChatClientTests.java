@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,7 @@ import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.function.FunctionToolCallback;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -2530,6 +2532,42 @@ class DefaultChatClientTests {
 
 		// Verify provider was called during execution
 		verify(provider, times(1)).getToolCallbacks();
+	}
+
+	@Test
+	void whenSystemResourceThenReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		Resource resource = new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8));
+		ChatClient chatClient = new DefaultChatClientBuilder(mockChatModel()).build();
+		var spec = (DefaultChatClient.DefaultChatClientRequestSpec) chatClient.prompt().system(resource);
+		assertThat(spec.getSystemText()).isEqualTo(text);
+	}
+
+	@Test
+	void whenUserResourceThenReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		Resource resource = new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8));
+		ChatClient chatClient = new DefaultChatClientBuilder(mockChatModel()).build();
+		var spec = (DefaultChatClient.DefaultChatClientRequestSpec) chatClient.prompt().user(resource);
+		assertThat(spec.getUserText()).isEqualTo(text);
+	}
+
+	@Test
+	void whenSystemTextResourceThenReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		Resource resource = new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8));
+		var spec = (DefaultChatClient.DefaultPromptSystemSpec) new DefaultChatClient.DefaultPromptSystemSpec()
+			.text(resource);
+		assertThat(spec.text()).isEqualTo(text);
+	}
+
+	@Test
+	void whenUserTextResourceThenReadAsUtf8() {
+		String text = "Réponds en français. Größe, Straße. 你好，请用中文回答。";
+		Resource resource = new ByteArrayResource(text.getBytes(StandardCharsets.UTF_8));
+		var spec = (DefaultChatClient.DefaultPromptUserSpec) new DefaultChatClient.DefaultPromptUserSpec()
+			.text(resource);
+		assertThat(spec.text()).isEqualTo(text);
 	}
 
 	record Person(String name) {

@@ -19,6 +19,7 @@ package org.springframework.ai.chat.messages;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -35,7 +36,7 @@ final class MessageUtils {
 	}
 
 	static String readResource(Resource resource) {
-		return readResource(resource, Charset.defaultCharset());
+		return readResource(resource, StandardCharsets.UTF_8);
 	}
 
 	static String readResource(Resource resource, Charset charset) {

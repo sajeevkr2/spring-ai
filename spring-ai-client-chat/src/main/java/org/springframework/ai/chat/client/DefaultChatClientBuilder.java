@@ -18,6 +18,7 @@ package org.springframework.ai.chat.client;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -157,7 +158,7 @@ public class DefaultChatClientBuilder implements Builder {
 	}
 
 	public Builder defaultUser(Resource text) {
-		return this.defaultUser(text, Charset.defaultCharset());
+		return this.defaultUser(text, StandardCharsets.UTF_8);
 	}
 
 	public Builder defaultUser(Consumer<PromptUserSpec> userSpecConsumer) {
@@ -183,7 +184,7 @@ public class DefaultChatClientBuilder implements Builder {
 	}
 
 	public Builder defaultSystem(Resource text) {
-		return this.defaultSystem(text, Charset.defaultCharset());
+		return this.defaultSystem(text, StandardCharsets.UTF_8);
 	}
 
 	public Builder defaultSystem(Consumer<PromptSystemSpec> systemSpecConsumer) {
